@@ -5,7 +5,6 @@ const InvoiceCalculator: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
   const [ttc, setTtc] = useState<string>("");
-  const [vehicule, setVehicule] = useState<string>("");
   const [tva, setTva] = useState<string>("");
   const [ht, setHt] = useState<number | null>(null);
   const [tvaAmount, setTvaAmount] = useState<number | null>(null);
@@ -46,7 +45,7 @@ const InvoiceCalculator: React.FC = () => {
     const ttcValue = ttc || "0.00";
     const htValue = ht?.toFixed(2) || "0.00";
     const tvaAmountValue = tvaAmount?.toFixed(2) || "0.00";
-    const vehiculeValue = vehicule || "N/A";
+
     const today = new Date();
     const formattedDate = `${String(today.getDate()).padStart(2, "0")}.${String(
       today.getMonth() + 1
@@ -102,7 +101,14 @@ const InvoiceCalculator: React.FC = () => {
           </style>
         </head>
         <body>
-          
+          <div class="container">
+            <div class="header">
+              <div class="stripe stripe-1"></div>
+              <div class="stripe stripe-2"></div>
+              <div class="stripe stripe-3"></div>
+              <div class="stripe stripe-4"></div>
+              <div class="curve"></div>
+            </div>
 
             <img
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-21%20at%2013.17.35_f9cc8a9c.jpg-P1mfU5bK7OB4loTdxaXHW12SQUIz1M.jpeg"
@@ -127,7 +133,7 @@ const InvoiceCalculator: React.FC = () => {
                 <td>CMPF OUARZAZATE</td>
               </tr>
               <tr>
-                <td>VEHICULE :${vehiculeValue}</td>
+                <td>VEHICULE :PEUGEOT</td>
                 <td>I.M.M : CY-529-R1</td>
               </tr>
               <tr>
@@ -156,6 +162,17 @@ const InvoiceCalculator: React.FC = () => {
               <p><i>R. N°09 DOUAR TAFERZOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
               <p>Tél : +212 661 40 38 17 / +212 661 85 51 59 - Email : <u>assistance.prestige@gmail.com</u></p>
               <p>RC N° 10573 - IF N° 37723370 - Patente N° 47163051 - CNSS N°7435295 - ICE N° 003538078000075</p>
+            </div>
+
+            <div class="footer">
+              <div class="stripe stripe-4"></div>
+              <div class="stripe stripe-3"></div>
+            </div>
+
+            <div class="footer-decoration">
+              <div class="circle"></div>
+              <div class="circle"></div>
+              <div class="circle"></div>
             </div>
           </div>
         </body>
@@ -221,18 +238,6 @@ const InvoiceCalculator: React.FC = () => {
             type="number"
             value={tva}
             onChange={(e) => setTva(e.target.value)}
-            className="ml-2 p-2 border rounded w-full max-w-xs"
-          />
-        </label>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="vehicule " className="block mb-2">
-        vehicule:
-          <input
-            id="vehicule"
-            type="text"
-            value={vehicule}
-            onChange={(e) => setVehicule(e.target.value)}
             className="ml-2 p-2 border rounded w-full max-w-xs"
           />
         </label>
