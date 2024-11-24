@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const InvoiceCalculator: React.FC = () => {
   const [accessCode, setAccessCode] = useState<string>("");
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-
   const [ttc, setTtc] = useState<string>("");
+  const [ice, setIce] = useState<string>("");
+  const [imm, setImm] = useState<string>("");
   const [vehicule, setVehicule] = useState<string>("");
+  const [nomben, setNomben] = useState<string>("");
   const [tva, setTva] = useState<string>("");
   const [ht, setHt] = useState<number | null>(null);
   const [tvaAmount, setTvaAmount] = useState<number | null>(null);
@@ -43,7 +45,9 @@ const InvoiceCalculator: React.FC = () => {
   };
 
   const printInvoice = () => {
+    // Define default values for variables
     const ttcValue = ttc || "0.00";
+    const iceValue = ice || "0.00";
     const htValue = ht?.toFixed(2) || "0.00";
     const tvaAmountValue = tvaAmount?.toFixed(2) || "0.00";
     const vehiculeValue = vehicule || "N/A";
@@ -51,59 +55,124 @@ const InvoiceCalculator: React.FC = () => {
     const formattedDate = `${String(today.getDate()).padStart(2, "0")}.${String(
       today.getMonth() + 1
     ).padStart(2, "0")}.${today.getFullYear()}`;
-
+  
+    // Construct the HTML for the invoice
     const invoiceHTML = `
       <html>
         <head>
           <style>
             body {
               font-family: Arial, sans-serif;
-              margin: 20px;
+              margin: 0;
+              padding: 0;
             }
             .container {
-              max-width: 600px;
+              max-width: 800px;
               margin: auto;
+              padding: 20px;
             }
-            .header {
-              text-align: left;
+            .header, .footer {
+              position: relative;
+              height: 64px;
+              margin-bottom: 32px;
             }
-            .details, .totals {
-              margin-top: 20px;
+            .stripe {
+              position: absolute;
+              left: 0;
+              right: 0;
+              height: 8px;
             }
-            .totals div {
-              display: flex;
-              justify-content: space-between;
+            .stripe-1 {
+              top: 0;
+              background-color: #1d4ed8;
+            }
+            .stripe-2 {
+              top: 8px;
+              background-color: #dc2626;
+              height: 4px;
+            }
+            .stripe-3 {
+              bottom: 8px;
+              background-color: #dc2626;
+              height: 4px;
+            }
+            .stripe-4 {
+              bottom: 0;
+              background-color: #1d4ed8;
+            }
+            .curve {
+              position: absolute;
+              left: 0;
+              top: 0;
+              height: 64px;
+              width: 96px;
+              border-left: 30px solid #dc2626;
+              border-bottom-right-radius: 100px;
             }
             .logo {
-              width: 100px;
-              height: 55px;
+              width: 120px;
+              height: 80px;
+              margin: 0 auto 16px;
+              display: block;
             }
-         
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-            .container { max-width: 800px; margin: auto; padding: 20px; }
-            .header, .footer { position: relative; height: 64px; margin-bottom: 32px; }
-            .stripe { position: absolute; left: 0; right: 0; height: 8px; }
-            .stripe-1 { top: 0; background-color: #1d4ed8; }
-            .stripe-2 { top: 8px; background-color: #dc2626; height: 4px; }
-            .stripe-3 { bottom: 8px; background-color: #dc2626; height: 4px; }
-            .stripe-4 { bottom: 0; background-color: #1d4ed8; }
-            .curve { position: absolute; left: 0; top: 0; height: 64px; width: 96px; border-left: 30px solid #dc2626; border-bottom-right-radius: 100px; }
-            .logo { width: 120px; height: 80px; margin: 0 auto 16px; display: block; }
-            .title { text-align: center; color: #1e3a8a; font-size: 24px; font-weight: bold; margin-bottom: 8px; }
-            .subtitle { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 32px; }
-            .invoice-number { font-size: 18px; font-weight: bold; margin-bottom: 24px; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-            td { border: 1px solid #9ca3af; padding: 8px; }
-            .total { font-weight: bold; margin-bottom: 32px; }
-            .signature { text-align: right; font-style: italic; margin-bottom: 32px; }
-            .footer-text { text-align: center; font-size: 14px; line-height: 1.5; margin-bottom: 32px; }
-            .footer-decoration { display: flex; justify-content: center; gap: 64px; margin-bottom: 16px; }
-            .circle { width: 32px; height: 32px; border: 4px solid #dc2626; border-radius: 50%; }
+            .title {
+              text-align: center;
+              color: #1e3a8a;
+              font-size: 24px;
+              font-weight: bold;
+              margin-bottom: 8px;
+            }
+            .subtitle {
+              display: flex;
+              justify-content: space-between;
+              font-size: 14px;
+              margin-bottom: 32px;
+            }
+            .invoice-number {
+              font-size: 18px;
+              font-weight: bold;
+              margin-bottom: 24px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 24px;
+            }
+            td {
+              border: 1px solid #9ca3af;
+              padding: 8px;
+            }
+            .total {
+              font-weight: bold;
+              margin-bottom: 32px;
+            }
+            .signature {
+              text-align: right;
+              font-style: italic;
+              margin-bottom: 32px;
+            }
+            .footer-text {
+              text-align: center;
+              font-size: 14px;
+              line-height: 1.5;
+              margin-bottom: 32px;
+            }
+            .footer-decoration {
+              display: flex;
+              justify-content: center;
+              gap: 64px;
+              margin-bottom: 16px;
+            }
+            .circle {
+              width: 32px;
+              height: 32px;
+              border: 4px solid #dc2626;
+              border-radius: 50%;
+            }
           </style>
         </head>
         <body>
-          
-
+          <div class="container">
             <img
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-21%20at%2013.17.35_f9cc8a9c.jpg-P1mfU5bK7OB4loTdxaXHW12SQUIz1M.jpeg"
                 alt="Logo"
@@ -114,24 +183,24 @@ const InvoiceCalculator: React.FC = () => {
               <span>OUARZAZATE</span>
               <span>LE: ${formattedDate}</span>
             </div>
-
+  
             <h2 class="invoice-number">FACTURE :N°00316/2024</h2>
-
+  
             <table>
               <tr>
                 <td>ICE :</td>
-                <td>001538130000070</td>
+                <td>${iceValue}</td>
               </tr>
               <tr>
                 <td>NOM DU BENEFICIERE</td>
-                <td>CMPF OUARZAZATE</td>
+                <td>${nomben}</td>
               </tr>
               <tr>
-                <td>VEHICULE :${vehiculeValue}</td>
-                <td>I.M.M : CY-529-R1</td>
+                <td>VEHICULE : ${vehiculeValue}</td>
+                <td>I.M.M : ${imm}</td>
               </tr>
               <tr>
-                <td>FRAIS D'ATTENT SUR TANGER MED 3 HOURS</td>
+                <td>FRAIS D'ATTENTE SUR TANGER MED 3 HOURS</td>
                 <td>${ttcValue} DH</td>
               </tr>
               <tr>
@@ -147,11 +216,11 @@ const InvoiceCalculator: React.FC = () => {
                 <td>${ttcValue} DH</td>
               </tr>
             </table>
-
+  
             <p class="total">Arrêté La Présente Facture À La Somme De ${ttcValue} DH</p>
-
+  
             <p class="signature">Assistance AUTO-PRESTIGE</p>
-
+  
             <div class="footer-text">
               <p><i>R. N°09 DOUAR TAFERZOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
               <p>Tél : +212 661 40 38 17 / +212 661 85 51 59 - Email : <u>assistance.prestige@gmail.com</u></p>
@@ -161,9 +230,9 @@ const InvoiceCalculator: React.FC = () => {
         </body>
       </html>
     `;
-
+  
+    // Open a new window and print the invoice
     const printWindow = window.open("", "_blank");
-
     if (printWindow) {
       printWindow.document.write(invoiceHTML);
       printWindow.document.close();
@@ -174,96 +243,289 @@ const InvoiceCalculator: React.FC = () => {
       alert("Failed to open print window. Please allow popups for this site.");
     }
   };
+  
 
   if (!isAuthorized) {
     return (
-      <div className="font-sans p-6">
-        <h1 className="text-2xl font-bold mb-4">Enter Access Code</h1>
-        <div className="mb-4">
-          <input
-            type="password"
-            placeholder="Enter code"
-            value={accessCode}
-            onChange={(e) => setAccessCode(e.target.value)}
-            className="p-2 border rounded w-full max-w-xs"
-          />
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem',
+        background: 'linear-gradient(to bottom, #f3f4f6, #e5e7eb)'
+      }}>
+        <div style={{
+          width: '700vh',
+          maxWidth: '400px',
+          padding: '2rem',
+          backgroundColor: 'white',
+          borderRadius: '0.5rem',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+        }}>
+          <h2 style={{
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            marginBottom: '1rem'
+          }}>Enter Access Code</h2>
+          <div style={{ marginBottom: '1rem' }}>
+            <label htmlFor="accessCode" style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: '500'
+            }}>Access Code</label>
+            <input
+              id="accessCode"
+              type="password"
+              placeholder="Enter code"
+              value={accessCode}
+              onChange={(e) => setAccessCode(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                border: '1px solid #d1d5db',
+                borderRadius: '0.25rem',
+                fontSize: '0.875rem'
+              }}
+            />
+          </div>
+          <button 
+            onClick={handleAccessCodeSubmit}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.25rem',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}
+          >
+            Submit
+          </button>
         </div>
-        <button
-          onClick={handleAccessCodeSubmit}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Submit
-        </button>
       </div>
     );
   }
 
   return (
-    <div className="font-sans p-6">
-      <h1 className="text-2xl font-bold mb-4">Invoice Calculator</h1>
-      <div className="mb-4">
-        <label htmlFor="ttc" className="block mb-2">
-          Montant Total T.T.C (TTC):
-          <input
-            id="ttc"
-            type="number"
-            value={ttc}
-            onChange={(e) => setTtc(e.target.value)}
-            className="ml-2 p-2 border rounded w-full max-w-xs"
-          />
-        </label>
+    <div style={{
+      minHeight: '100vh',
+      width: '200vh',
+      padding: '2rem',
+      background: 'linear-gradient(to bottom, #f3f4f6, #e5e7eb)'
+    }}>
+      <div style={{
+        maxWidth: '42rem',
+        margin: '0 auto',
+        padding: '2rem',
+        backgroundColor: 'white',
+        borderRadius: '0.5rem',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      }}>
+        <h1 style={{
+          fontSize: '1.875rem',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          color: '#1f2937',
+          marginBottom: '1.5rem'
+        }}>
+          Invoice Calculator
+        </h1>
+        <div style={{
+          display: 'grid',
+          gap: '1.5rem',
+          marginBottom: '1.5rem'
+        }}>
+          <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+            <div>
+              <label htmlFor="ttc" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>Montant Total T.T.C (TTC)</label>
+              <input
+                id="ttc"
+                type="number"
+                value={ttc}
+                onChange={(e) => setTtc(e.target.value)}
+                placeholder="Enter TTC amount"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="tva" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>Taux T.V.A (%)</label>
+              <input
+                id="tva"
+                type="number"
+                value={tva}
+                onChange={(e) => setTva(e.target.value)}
+                placeholder="Enter TVA rate"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="vehicule" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>Vehicule</label>
+              <input
+                id="vehicule"
+                type="text"
+                value={vehicule}
+                onChange={(e) => setVehicule(e.target.value)}
+                placeholder="Enter vehicle details"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="imm" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>I.M.M</label>
+              <input
+                id="imm"
+                type="text"
+                value={imm}
+                onChange={(e) => setImm(e.target.value)}
+                placeholder="Enter IMM"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="ice" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>ICE</label>
+              <input
+                id="ice"
+                type="text"
+                value={ice}
+                onChange={(e) => setIce(e.target.value)}
+                placeholder="Enter ICE"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="nomben" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>NOM DU BENEFICIERE</label>
+              <input
+                id="nomben"
+                type="text"
+                value={nomben}
+                onChange={(e) => setNomben(e.target.value)}
+                placeholder="Enter beneficiary name"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <button 
+          onClick={calculateInvoice}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '0.25rem',
+            fontSize: '1rem',
+            fontWeight: '500',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1.5rem'
+          }}
+        >
+          <span style={{ marginRight: '0.5rem' }}>📊</span>
+          Calculer
+        </button>
+
+        <div style={{
+          backgroundColor: '#f9fafb',
+          borderRadius: '0.375rem',
+          padding: '1.5rem',
+          marginBottom: '1.5rem'
+        }}>
+          <h2 style={{
+            fontSize: '1.25rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>Invoice Details</h2>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '0.5rem'
+          }}>
+            <span style={{ fontWeight: '500' }}>Total H.T:</span>
+            <span>{ht !== null ? `${ht} DH` : "0.00 DH"}</span>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '0.5rem'
+          }}>
+            <span style={{ fontWeight: '500' }}>Total T.V.A:</span>
+            <span>{tvaAmount !== null ? `${tvaAmount} DH` : "0.00 DH"}</span>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}>
+            <span style={{ fontWeight: '500' }}>Montant Total T.T.C:</span>
+            <span>{ttc || "0.00"} DH</span>
+          </div>
+        </div>
+
+        <button 
+          onClick={printInvoice}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            backgroundColor: 'white',
+            color: '#3b82f6',
+            border: '1px solid #3b82f6',
+            borderRadius: '0.25rem',
+            fontSize: '1rem',
+            fontWeight: '500',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <span style={{ marginRight: '0.5rem' }}>🖨️</span>
+          Print Invoice
+        </button>
       </div>
-      <div className="mb-4">
-        <label htmlFor="tva" className="block mb-2">
-          Taux T.V.A (%):
-          <input
-            id="tva"
-            type="number"
-            value={tva}
-            onChange={(e) => setTva(e.target.value)}
-            className="ml-2 p-2 border rounded w-full max-w-xs"
-          />
-        </label>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="vehicule " className="block mb-2">
-        vehicule:
-          <input
-            id="vehicule"
-            type="text"
-            value={vehicule}
-            onChange={(e) => setVehicule(e.target.value)}
-            className="ml-2 p-2 border rounded w-full max-w-xs"
-          />
-        </label>
-      </div>
-      <button
-        onClick={calculateInvoice}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mb-4"
-      >
-        Calculer
-      </button>
-      <div
-        id="invoice"
-        className="mt-8 p-6 border rounded-lg bg-gray-50"
-      >
-        <h2 className="text-xl font-bold mb-4">Invoice Details</h2>
-        <p className="mb-2">
-          <strong>Total H.T:</strong> {ht !== null ? `${ht} DH` : "0.00 DH"}
-        </p>
-        <p className="mb-2">
-          <strong>Total T.V.A:</strong> {tvaAmount !== null ? `${tvaAmount} DH` : "0.00 DH"}
-        </p>
-        <p className="mb-2">
-          <strong>Montant Total T.T.C:</strong> {ttc || "0.00"} DH
-        </p>
-      </div>
-      <button
-        onClick={printInvoice}
-        className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-      >
-        Print Invoice
-      </button>
     </div>
   );
 };
