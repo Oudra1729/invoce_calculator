@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { convertToWordsAndDirhams } from './convert';
+import './App.css';
 
 const InvoiceCalculator: React.FC = () => {
   const [accessCode, setAccessCode] = useState<string>("");
@@ -110,15 +112,15 @@ const InvoiceCalculator: React.FC = () => {
               border-bottom-right-radius: 100px;
             }
             .logo {
-              width: 120px;
-              height: 80px;
+              width: 200px;
+              height: 100px;
               margin: 0 auto 16px;
               display: block;
             }
             .title {
               text-align: center;
               color: #1e3a8a;
-              font-size: 24px;
+              font-size: 20px;
               font-weight: bold;
               margin-bottom: 8px;
             }
@@ -142,21 +144,28 @@ const InvoiceCalculator: React.FC = () => {
               border: 1px solid #9ca3af;
               padding: 8px;
             }
-            .total {
-              font-weight: bold;
-              margin-bottom: 32px;
-            }
-            .signature {
-              text-align: right;
-              font-style: italic;
-              margin-bottom: 32px;
-            }
-            .footer-text {
-              text-align: center;
-              font-size: 14px;
-              line-height: 1.5;
-              margin-bottom: 32px;
-            }
+           .total {
+  
+  margin-bottom: 64px; /* Add more space below the total */
+}
+
+.footer-line {
+  border-top: 2px solid #9ca3af; /* Add a line above the footer */
+  margin-bottom: 16px; /* Add space between the line and footer */
+}
+
+.footer-text {
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 5px;
+  margin-top: 16px; /* Adjust for more spacing after the line */
+}
+.emplty{
+  text-align: center;
+  width:200px;
+  height:200px; 
+  }
             .footer-decoration {
               display: flex;
               justify-content: center;
@@ -216,16 +225,20 @@ const InvoiceCalculator: React.FC = () => {
                 <td>${ttcValue} DH</td>
               </tr>
             </table>
-  
-            <p class="total">Arrêté La Présente Facture À La Somme De ${ttcValue} DH</p>
-  
-            <p class="signature">Assistance AUTO-PRESTIGE</p>
-  
+             <p class="total">Arrêté La Présente Facture À La Somme De : <br> ${convertToWordsAndDirhams(parseFloat(ttcValue))}</p>
+
+            <div class="emplty">
+          
+            </div>
+
+            <div class="footer-line"></div>
+
             <div class="footer-text">
               <p><i>R. N°09 DOUAR TAFERZOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
               <p>Tél : +212 661 40 38 17 / +212 661 85 51 59 - Email : <u>assistance.prestige@gmail.com</u></p>
               <p>RC N° 10573 - IF N° 37723370 - Patente N° 47163051 - CNSS N°7435295 - ICE N° 003538078000075</p>
             </div>
+
           </div>
         </body>
       </html>
