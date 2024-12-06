@@ -234,7 +234,7 @@ const InvoiceCalculator: React.FC = () => {
             <div class="footer-line"></div>
 
             <div class="footer-text">
-              <p><i>R. N°09 DOUAR TAFERZOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
+              <p><i>R. N°09 DOUAR TAZEGZAOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
               <p>Tél : +212 661 40 38 17 / +212 661 85 51 59 - Email : <u>assistance.prestige@gmail.com</u></p>
               <p>RC N° 10573 - IF N° 37723370 - Patente N° 47163051 - CNSS N°7435295 - ICE N° 003538078000075</p>
             </div>
