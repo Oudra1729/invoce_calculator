@@ -64,189 +64,73 @@ const InvoiceCalculator: React.FC = () => {
   
     // Construct the HTML for the invoice
     const invoiceHTML = `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 0;
-            }
-            .container {
-              max-width: 800px;
-              margin: auto;
-              padding: 20px;
-            }
-            .header, .footer {
-              position: relative;
-              height: 64px;
-              margin-bottom: 32px;
-            }
-            .stripe {
-              position: absolute;
-              left: 0;
-              right: 0;
-              height: 8px;
-            }
-            .stripe-1 {
-              top: 0;
-              background-color: #1d4ed8;
-            }
-            .stripe-2 {
-              top: 8px;
-              background-color: #dc2626;
-              height: 4px;
-            }
-            .stripe-3 {
-              bottom: 8px;
-              background-color: #dc2626;
-              height: 4px;
-            }
-            .stripe-4 {
-              bottom: 0;
-              background-color: #1d4ed8;
-            }
-            .curve {
-              position: absolute;
-              left: 0;
-              top: 0;
-              height: 64px;
-              width: 96px;
-              border-left: 30px solid #dc2626;
-              border-bottom-right-radius: 100px;
-            }
-            .logo {
-              width: 200px;
-              height: 100px;
-              margin: 0 auto 16px;
-              display: block;
-            }
-            .title {
-              text-align: center;
-              color: #1e3a8a;
-              font-size: 20px;
-              font-weight: bold;
-              margin-bottom: 8px;
-            }
-            .subtitle {
-              display: flex;
-              justify-content: space-between;
-              font-size: 14px;
-              margin-bottom: 32px;
-            }
-            .invoice-number {
-              font-size: 18px;
-              font-weight: bold;
-              margin-bottom: 24px;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-bottom: 24px;
-            }
-            td {
-              border: 1px solid #9ca3af;
-              padding: 8px;
-            }
-           .total {
-  
-  margin-bottom: 64px; /* Add more space below the total */
-}
+     <html>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans m-0 p-0">
+  <div class="max-w-3xl mx-auto p-5">
+    <img
+      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-21%20at%2013.17.35_f9cc8a9c.jpg-P1mfU5bK7OB4loTdxaXHW12SQUIz1M.jpeg"
+      alt="Logo"
+      class="w-52 h-24 mx-auto mb-4"
+    />
+    <h1 class="text-center text-blue-800 font-bold text-xl mb-2">
+      CAMIONS DEPANNAGE PLATEAUX - AIDE AUX CONSTATAT AMIABLE
+    </h1>
+    <div class="flex justify-between text-sm mb-8">
+      <span>OUARZAZATE</span>
+      <span>LE: ${formattedDate}</span>
+    </div>
 
-.footer-line {
-  border-top: 2px solid #9ca3af; /* Add a line above the footer */
-  margin-bottom: 16px; /* Add space between the line and footer */
-}
+    <h2 class="text-lg font-bold mb-6">FACTURE :N°0${numverFacture}/2024</h2>
 
-.footer-text {
-  text-align: center;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 5px;
-  margin-top: 16px; /* Adjust for more spacing after the line */
-}
-.emplty{
-  text-align: center;
-  width:200px;
-  height:200px; 
-  }
-            .footer-decoration {
-              display: flex;
-              justify-content: center;
-              gap: 64px;
-              margin-bottom: 16px;
-            }
-            .circle {
-              width: 32px;
-              height: 32px;
-              border: 4px solid #dc2626;
-              border-radius: 50%;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-21%20at%2013.17.35_f9cc8a9c.jpg-P1mfU5bK7OB4loTdxaXHW12SQUIz1M.jpeg"
-                alt="Logo"
-                class="logo"
-              />
-            <h1 class="title">CAMIONS DEPANNAGE PLATEAUX - AIDE AUX CONSTATAT AMIABLE</h1>
-            <div class="subtitle">
-              <span>OUARZAZATE</span>
-              <span>LE: ${formattedDate}</span>
-            </div>
-  
-            <h2 class="invoice-number">FACTURE :N°0${numverFacture}/2024</h2>
-  
-            <table>
-              <tr>
-                <td>ICE :</td>
-                <td>${iceValue}</td>
-              </tr>
-              <tr>
-                <td>NOM DU BENEFICIERE</td>
-                <td>${nomben}</td>
-              </tr>
-              <tr>
-                <td>VEHICULE : ${vehiculeValue}</td>
-                <td>I.M.M : ${imm}</td>
-              </tr>
-              <tr>
-                <td>FRAIS D'ATTENTE SUR ${frais}</td>
-                <td>${ttcValue} DH</td>
-              </tr>
-              <tr>
-                <td>TOTAL. H.T</td>
-                <td>${htValue} DH</td>
-              </tr>
-              <tr>
-                <td>TOTAL . T.V.A</td>
-                <td>${tvaAmountValue} DH</td>
-              </tr>
-              <tr>
-                <td>MONTANT TOTAL T.T.C</td>
-                <td>${ttcValue} DH</td>
-              </tr>
-            </table>
-             <p class="total">Arrêté La Présente Facture À La Somme De : <br> ${convertToWordsAndDirhams(parseFloat(ttcValue))}</p>
-              <p> 
+    <table class="w-full border border-gray-300 mb-6">
+      <tr>
+        <td class="border border-gray-300 p-2">ICE :</td>
+        <td class="border border-gray-300 p-2">${iceValue}</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 p-2">NOM DU BENEFICIERE</td>
+        <td class="border border-gray-300 p-2">${nomben}</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 p-2">VEHICULE : ${vehiculeValue}</td>
+        <td class="border border-gray-300 p-2">I.M.M : ${imm}</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 p-2">FRAIS D'ATTENTE SUR ${frais}</td>
+        <td class="border border-gray-300 p-2">${ttcValue} DH</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 p-2">TOTAL. H.T</td>
+        <td class="border border-gray-300 p-2">${htValue} DH</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 p-2">TOTAL . T.V.A</td>
+        <td class="border border-gray-300 p-2">${tvaAmountValue} DH</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 p-2">MONTANT TOTAL T.T.C</td>
+        <td class="border border-gray-300 p-2">${ttcValue} DH</td>
+      </tr>
+    </table>
 
-            <div class="emplty">
-          
-            </div>
+    <p class="mb-16">Arrêté La Présente Facture À La Somme De : <br> ${convertToWordsAndDirhams(parseFloat(ttcValue))}</p>
 
-            <div class="footer-line"></div>
+    <div class="w-48 h-48 mx-auto "></div>
 
-            <div class="footer-text">
-              <p><i>R. N°09 DOUAR TAZEGZAOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
-              <p>Tél : +212 661 40 38 17 / +212 661 85 51 59 - Email : <u>assistance.prestige@gmail.com</u></p>
-              <p>RC N° 10573 - IF N° 37723370 - Patente N° 47163051 - CNSS N°7435295 - ICE N° 003538078000075</p>
-            </div>
+    <div class="border-t-2 border-gray-300 my-4"></div>
 
-          </div>
-        </body>
-      </html>
+    <div class="text-center text-sm leading-relaxed">
+      <p><i>R. N°09 DOUAR TAZEGZAOUTE COMMUNE IGHREM N'OUGDAL OUARZAZATE</i></p>
+      <p>Tél : +212 661 40 38 17 / +212 661 85 51 59 - Email : <u>assistance.prestige@gmail.com</u></p>
+      <p>RC N° 10573 - IF N° 37723370 - Patente N° 47163051 - CNSS N°7435295 - ICE N° 003538078000075</p>
+    </div>
+  </div>
+</body>
+</html>
+
     `;
   
     // Open a new window and print the invoice
