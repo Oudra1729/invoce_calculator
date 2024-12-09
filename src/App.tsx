@@ -6,7 +6,9 @@ const InvoiceCalculator: React.FC = () => {
   const [accessCode, setAccessCode] = useState<string>("");
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [ttc, setTtc] = useState<string>("");
+  const [fra, setFra] = useState<string>("");
   const [ice, setIce] = useState<string>("");
+  const [num, setNum] = useState<string>("");
   const [imm, setImm] = useState<string>("");
   const [vehicule, setVehicule] = useState<string>("");
   const [nomben, setNomben] = useState<string>("");
@@ -49,7 +51,9 @@ const InvoiceCalculator: React.FC = () => {
   const printInvoice = () => {
     // Define default values for variables
     const ttcValue = ttc || "0.00";
+    const frais = fra || "0.00";
     const iceValue = ice || "0.00";
+    const numverFacture = num || "0.00";
     const htValue = ht?.toFixed(2) || "0.00";
     const tvaAmountValue = tvaAmount?.toFixed(2) || "0.00";
     const vehiculeValue = vehicule || "N/A";
@@ -193,7 +197,7 @@ const InvoiceCalculator: React.FC = () => {
               <span>LE: ${formattedDate}</span>
             </div>
   
-            <h2 class="invoice-number">FACTURE :N°00316/2024</h2>
+            <h2 class="invoice-number">FACTURE :N°0${numverFacture}/2024</h2>
   
             <table>
               <tr>
@@ -209,7 +213,7 @@ const InvoiceCalculator: React.FC = () => {
                 <td>I.M.M : ${imm}</td>
               </tr>
               <tr>
-                <td>FRAIS D'ATTENTE SUR TANGER MED 3 HOURS</td>
+                <td>FRAIS D'ATTENTE SUR ${frais}</td>
                 <td>${ttcValue} DH</td>
               </tr>
               <tr>
@@ -226,6 +230,7 @@ const InvoiceCalculator: React.FC = () => {
               </tr>
             </table>
              <p class="total">Arrêté La Présente Facture À La Somme De : <br> ${convertToWordsAndDirhams(parseFloat(ttcValue))}</p>
+              <p> 
 
             <div class="emplty">
           
@@ -448,6 +453,40 @@ const InvoiceCalculator: React.FC = () => {
                 value={nomben}
                 onChange={(e) => setNomben(e.target.value)}
                 placeholder="Enter beneficiary name"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="num" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>Numbrer Facture</label>
+              <input
+                id="num"
+                type="number"
+                value={num}
+                onChange={(e) => setNum(e.target.value)}
+                placeholder="Enter a number"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.875rem'
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="fra" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>FRAIS D'ATTENTE SUR :</label>
+              <input
+                id="fra"
+                type="text"
+                value={fra}
+                onChange={(e) => setFra(e.target.value)}
+                placeholder="Enter farais d'attant "
                 style={{
                   width: '100%',
                   padding: '0.5rem',
