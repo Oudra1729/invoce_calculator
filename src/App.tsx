@@ -99,7 +99,7 @@ const InvoiceCalculator: React.FC = () => {
         <td class="border border-gray-300 p-2">I.M.M : ${imm}</td>
       </tr>
       <tr>
-        <td class="border border-gray-300 p-2">FRAIS D'ATTENTE SUR ${frais}</td>
+        <td class="border border-gray-300 p-2">${frais}</td>
         <td class="border border-gray-300 p-2">${ttcValue} DH</td>
       </tr>
       <tr>
